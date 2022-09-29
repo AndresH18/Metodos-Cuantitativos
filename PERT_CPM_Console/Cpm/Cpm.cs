@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace PERT_CPM_Console;
+﻿namespace PERT_CPM_Console.Cpm;
 
 public sealed class Cpm
 {

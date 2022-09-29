@@ -2,7 +2,7 @@
 
 public class Node
 {
-    public string Name { get;  } = string.Empty;
+    public string Name { get; protected init; } = string.Empty;
     public virtual double Length { get;  }
     public double EarlyStart { get; private set; }
     public double EarlyEnd => EarlyStart + Length;

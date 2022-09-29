@@ -1,7 +1,12 @@
 ﻿namespace PERT_CPM_Console;
 
+using PERT_CPM_Console.Cpm;
+using Pe = PERT_CPM_Console.Pert;
+
 public static class TestCases
 {
+    #region CPM
+
     /// <summary>
     /// <p>Test Start to end algorithm</p>
     /// <p>Expected Value: 23</p>
@@ -29,11 +34,11 @@ public static class TestCases
 
         var end = new FinalNode
         {
-            ParentNodes = {h, i}
+            FinalNodes = {h, i}
         };
 
         var initial = new InitialNode {StartNodes = {a, b}};
-        var cpm = new Cpm {InitialNode = initial};
+        var cpm = new Cpm.Cpm {InitialNode = initial};
 
         var duracionProyecto = cpm.StartToEnd();
         Console.WriteLine("=========================");
@@ -76,13 +81,13 @@ public static class TestCases
         // declare end node
         var final = new FinalNode
         {
-            ParentNodes = {h, i}
+            FinalNodes = {h, i}
         };
 
         // declare initial Node
         var initial = new InitialNode {StartNodes = {a, b}};
         // create cpm object
-        var cpm = new Cpm {InitialNode = initial, FinalNode = final};
+        var cpm = new Cpm.Cpm {InitialNode = initial, FinalNode = final};
         // start to end. get proyect duration.
         var duracionProyecto = cpm.StartToEnd();
 
@@ -127,13 +132,13 @@ public static class TestCases
         // declare end node
         var final = new FinalNode
         {
-            ParentNodes = {h, i}
+            FinalNodes = {h, i}
         };
 
         // declare initial Node
         var initial = new InitialNode {StartNodes = {a, b}};
         // create cpm object
-        var cpm = new Cpm {InitialNode = initial, FinalNode = final};
+        var cpm = new Cpm.Cpm {InitialNode = initial, FinalNode = final};
         // start to end. get proyect duration.
         var duracionProyecto = cpm.StartToEnd();
 
@@ -161,9 +166,9 @@ public static class TestCases
 
         var initial = new InitialNode {StartNodes = {a}};
 
-        var final = new FinalNode {ParentNodes = {f}};
+        var final = new FinalNode {FinalNodes = {f}};
 
-        var cpm = new Cpm(initial, final);
+        var cpm = new Cpm.Cpm(initial, final);
 
         cpm.Calculate();
         Console.WriteLine("=========================");
@@ -194,13 +199,51 @@ public static class TestCases
         e.AddChild(g);
 
         var initial = new InitialNode {StartNodes = {a, b}};
-        var final = new FinalNode {ParentNodes = {h, g}};
+        var final = new FinalNode {FinalNodes = {h, g}};
 
-        var cpm = new Cpm(initial, final);
+        var cpm = new Cpm.Cpm(initial, final);
         cpm.Calculate();
         Console.WriteLine("=========================");
         Console.WriteLine($"Project length = {cpm.ProjectLength}");
         Console.WriteLine("Critical Route:");
         cpm.CriticalRoute.ForEach(n => Console.WriteLine(n.Name));
     }
+
+    #endregion
+
+    #region PERT
+
+    /// <summary>
+    /// Expected output: Time=52; Route = {A, C, E, G, H}; Deviation=3.7851
+    /// </summary>
+    public static void Test6()
+    {
+        var a = new Pe::PertNode("A", 4, 8, 12);
+        var b = new Pe::PertNode("B", 6, 7, 8);
+        var c = new Pe::PertNode("C", 6, 12, 18);
+        var d = new Pe::PertNode("D", 3, 5, 7);
+        var e = new Pe::PertNode("E", 6, 9, 18);
+        var f = new Pe::PertNode("F", 5, 8, 17);
+        var g = new Pe::PertNode("G", 10, 15, 20);
+        var h = new Pe::PertNode("H", 5, 6, 13);
+
+        a.AddChild(b).AddChild(f).AddChild(h);
+        f.AddChild(g).AddChild(h);
+        a.AddChild(c).AddChild(f);
+        c.AddChild(e).AddChild(g);
+        a.AddChild(d).AddChild(e);
+
+        var initial = new InitialNode() {StartNodes = {a}};
+        var final = new FinalNode() {FinalNodes = {h, e}};
+
+        var pert = new Pe::Pert(initial, final);
+
+        pert.Calculate();
+
+        Console.WriteLine($"Project lenght={pert.ProjectLength}");
+        Console.WriteLine($"Project Deviation={pert.ProjectDeviation:.0000}");
+        pert.CriticalRoute.ForEach(n => Console.WriteLine(n.Name));
+    }
+
+    #endregion
 }
