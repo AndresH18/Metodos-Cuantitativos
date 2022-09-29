@@ -2,12 +2,12 @@
 
 public class Node
 {
-    public string Name { get; set; } = string.Empty;
-    public double Length { get; set; }
-    public double EarlyStart { get; set; }
+    public string Name { get;  } = string.Empty;
+    public virtual double Length { get;  }
+    public double EarlyStart { get; private set; }
     public double EarlyEnd => EarlyStart + Length;
 
-    public double LateEnd { get; set; } = double.MaxValue;
+    public double LateEnd { get; private set; } = double.MaxValue;
     public double LateStart => LateEnd - Length;
 
     public double Slack => LateStart - EarlyStart;
