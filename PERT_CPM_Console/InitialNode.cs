@@ -2,5 +2,5 @@
 
 public sealed class InitialNode
 {
-    public List<Node> StartNodes { get; set; } = new();
+    public HashSet<Node> StartNodes { get; set; } = new();
 }

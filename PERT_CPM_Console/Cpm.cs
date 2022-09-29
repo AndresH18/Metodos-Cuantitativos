@@ -2,14 +2,13 @@
 
 public sealed class Cpm
 {
-    private InitialNode _initial;
+    public InitialNode InitialNode { get; init; }
+    public FinalNode FinalNode { get; init; }
+
+    public HashSet<Node> FinalNodes { get; init; } = new();
 
     public double? Length { get; private set; } = default;
 
-    public Cpm(InitialNode initial)
-    {
-        _initial = initial;
-    }
 
     public double StartToEnd()
     {
@@ -19,11 +18,16 @@ public sealed class Cpm
         // }
         // return Length;
 
-        return Length ??= _initial.StartNodes.Max(n => n.ToEnd());
+        return Length ??= InitialNode.StartNodes.Max(n => n.ToEnd());
     }
 
     public void EndToStart()
     {
-        // TODO:
+        FinalNode.ToStart(Length ?? 0);
+    }
+
+    public void CriticalRoute()
+    {
+        
     }
 }
