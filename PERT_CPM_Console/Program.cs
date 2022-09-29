@@ -2,6 +2,7 @@
 
 
 using PERT_CPM_Console;
+using PERT_CPM_Console.Tests;
 
 // Console.WriteLine("Hello, World!");
 //

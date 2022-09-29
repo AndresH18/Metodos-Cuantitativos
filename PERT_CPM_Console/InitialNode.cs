@@ -1,4 +1,6 @@
-﻿namespace PERT_CPM_Console;
+﻿using PERT_CPM_Console.CPM;
+
+namespace PERT_CPM_Console;
 
 public sealed class InitialNode
 {

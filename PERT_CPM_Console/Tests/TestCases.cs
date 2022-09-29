@@ -1,7 +1,7 @@
-﻿namespace PERT_CPM_Console;
+﻿using PERT_CPM_Console.CPM;
+using PERT_CPM_Console.PERT;
 
-using PERT_CPM_Console.Cpm;
-using Pe = PERT_CPM_Console.Pert;
+namespace PERT_CPM_Console.Tests;
 
 public static class TestCases
 {
@@ -38,7 +38,7 @@ public static class TestCases
         };
 
         var initial = new InitialNode {StartNodes = {a, b}};
-        var cpm = new Cpm.Cpm {InitialNode = initial};
+        var cpm = new Cpm {InitialNode = initial};
 
         var duracionProyecto = cpm.StartToEnd();
         Console.WriteLine("=========================");
@@ -87,7 +87,7 @@ public static class TestCases
         // declare initial Node
         var initial = new InitialNode {StartNodes = {a, b}};
         // create cpm object
-        var cpm = new Cpm.Cpm {InitialNode = initial, FinalNode = final};
+        var cpm = new Cpm {InitialNode = initial, FinalNode = final};
         // start to end. get proyect duration.
         var duracionProyecto = cpm.StartToEnd();
 
@@ -138,7 +138,7 @@ public static class TestCases
         // declare initial Node
         var initial = new InitialNode {StartNodes = {a, b}};
         // create cpm object
-        var cpm = new Cpm.Cpm {InitialNode = initial, FinalNode = final};
+        var cpm = new Cpm {InitialNode = initial, FinalNode = final};
         // start to end. get proyect duration.
         var duracionProyecto = cpm.StartToEnd();
 
@@ -168,7 +168,7 @@ public static class TestCases
 
         var final = new FinalNode {FinalNodes = {f}};
 
-        var cpm = new Cpm.Cpm(initial, final);
+        var cpm = new Cpm(initial, final);
 
         cpm.Calculate();
         Console.WriteLine("=========================");
@@ -201,7 +201,7 @@ public static class TestCases
         var initial = new InitialNode {StartNodes = {a, b}};
         var final = new FinalNode {FinalNodes = {h, g}};
 
-        var cpm = new Cpm.Cpm(initial, final);
+        var cpm = new Cpm(initial, final);
         cpm.Calculate();
         Console.WriteLine("=========================");
         Console.WriteLine($"Project length = {cpm.ProjectLength}");
@@ -218,14 +218,14 @@ public static class TestCases
     /// </summary>
     public static void Test6()
     {
-        var a = new Pe::PertNode("A", 4, 8, 12);
-        var b = new Pe::PertNode("B", 6, 7, 8);
-        var c = new Pe::PertNode("C", 6, 12, 18);
-        var d = new Pe::PertNode("D", 3, 5, 7);
-        var e = new Pe::PertNode("E", 6, 9, 18);
-        var f = new Pe::PertNode("F", 5, 8, 17);
-        var g = new Pe::PertNode("G", 10, 15, 20);
-        var h = new Pe::PertNode("H", 5, 6, 13);
+        var a = new PertNode("A", 4, 8, 12);
+        var b = new PertNode("B", 6, 7, 8);
+        var c = new PertNode("C", 6, 12, 18);
+        var d = new PertNode("D", 3, 5, 7);
+        var e = new PertNode("E", 6, 9, 18);
+        var f = new PertNode("F", 5, 8, 17);
+        var g = new PertNode("G", 10, 15, 20);
+        var h = new PertNode("H", 5, 6, 13);
 
         a.AddChild(b).AddChild(f).AddChild(h);
         f.AddChild(g).AddChild(h);
@@ -236,7 +236,7 @@ public static class TestCases
         var initial = new InitialNode() {StartNodes = {a}};
         var final = new FinalNode() {FinalNodes = {h, e}};
 
-        var pert = new Pe::Pert(initial, final);
+        var pert = new Pert(initial, final);
 
         pert.Calculate();
 

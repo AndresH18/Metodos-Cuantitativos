@@ -1,4 +1,4 @@
-﻿namespace PERT_CPM_Console;
+﻿namespace PERT_CPM_Console.CPM;
 
 public class Node
 {

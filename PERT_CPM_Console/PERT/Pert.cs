@@ -1,32 +1,28 @@
-﻿namespace PERT_CPM_Console.Cpm;
+﻿namespace PERT_CPM_Console.PERT;
 
-public sealed class Cpm
+
+public class Pert
 {
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
-    public List<Node> CriticalRoute { get; private set; } = new();
+    public List<PertNode> CriticalRoute { get; private set; } = new();
+    public double ProjectVariance => CriticalRoute.Sum(n => Math.Pow(n.Deviation, 2));
+    public double ProjectDeviation => Math.Sqrt(ProjectVariance);
 
     public double ProjectLength { get; private set; } = default;
 
-    public Cpm()
+    public Pert()
     {
     }
 
-    public Cpm(InitialNode initialNode, FinalNode finalNode)
+    public Pert(InitialNode initialNode, FinalNode finalNode)
     {
         InitialNode = initialNode;
         FinalNode = finalNode;
     }
 
-
     public double StartToEnd()
     {
-        // if (Length == null)
-        // {
-        //     Length = _initial.StartNodes.Max(n => n.ToEnd());
-        // }
-        // return Length;
-
         return ProjectLength = InitialNode.StartNodes.Max(n => n.ToEnd());
     }
 
@@ -35,9 +31,13 @@ public sealed class Cpm
         FinalNode.ToStart(ProjectLength);
     }
 
-    public List<Node> CalculateCriticalRoute()
+    public List<PertNode> CalculateCriticalRoute()
     {
-        return CriticalRoute = InitialNode.CriticalRoute().ToList();
+        var r = InitialNode.CriticalRoute().ToList();
+        CriticalRoute = new List<PertNode>();
+        r.ForEach(n => CriticalRoute.Add((PertNode) n));
+        // return CriticalRoute = InitialNode.CriticalRoute().ToList();
+        return CriticalRoute;
     }
 
     private void SetNodesToCritical()

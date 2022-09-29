@@ -1,4 +1,6 @@
-﻿namespace PERT_CPM_Console.Pert;
+﻿using PERT_CPM_Console.CPM;
+
+namespace PERT_CPM_Console.PERT;
 
 public class PertNode : Node
 {
