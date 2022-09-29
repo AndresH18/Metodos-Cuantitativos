@@ -6,12 +6,9 @@ public sealed class Cpm
 {
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
-
-    public HashSet<Node> FinalNodes { get; } = new();
-
     public List<Node> CriticalRoute { get; private set; } = new();
 
-    public double Length { get; private set; } = default;
+    public double ProjectLength { get; private set; } = default;
 
     public Cpm()
     {
@@ -32,12 +29,12 @@ public sealed class Cpm
         // }
         // return Length;
 
-        return Length = InitialNode.StartNodes.Max(n => n.ToEnd());
+        return ProjectLength = InitialNode.StartNodes.Max(n => n.ToEnd());
     }
 
     public void EndToStart()
     {
-        FinalNode.ToStart(Length);
+        FinalNode.ToStart(ProjectLength);
     }
 
     public List<Node> CalculateCriticalRoute()
@@ -45,10 +42,16 @@ public sealed class Cpm
         return CriticalRoute = InitialNode.CriticalRoute().ToList();
     }
 
+    private void SetNodesToCritical()
+    {
+        CriticalRoute.ForEach(n => n.IsCritical = true);
+    }
+
     public void Calculate()
     {
         StartToEnd();
         EndToStart();
         CalculateCriticalRoute();
+        SetNodesToCritical();
     }
 }
