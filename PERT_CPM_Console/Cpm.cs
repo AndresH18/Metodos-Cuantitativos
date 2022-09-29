@@ -1,13 +1,27 @@
-﻿namespace PERT_CPM_Console;
+﻿using System.Collections.Immutable;
+
+namespace PERT_CPM_Console;
 
 public sealed class Cpm
 {
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
 
-    public HashSet<Node> FinalNodes { get; init; } = new();
+    public HashSet<Node> FinalNodes { get; } = new();
 
-    public double? Length { get; private set; } = default;
+    public List<Node> CriticalRoute { get; private set; } = new();
+
+    public double Length { get; private set; } = default;
+
+    public Cpm()
+    {
+    }
+
+    public Cpm(InitialNode initialNode, FinalNode finalNode)
+    {
+        InitialNode = initialNode;
+        FinalNode = finalNode;
+    }
 
 
     public double StartToEnd()
@@ -18,16 +32,23 @@ public sealed class Cpm
         // }
         // return Length;
 
-        return Length ??= InitialNode.StartNodes.Max(n => n.ToEnd());
+        return Length = InitialNode.StartNodes.Max(n => n.ToEnd());
     }
 
     public void EndToStart()
     {
-        FinalNode.ToStart(Length ?? 0);
+        FinalNode.ToStart(Length);
     }
 
-    public void CriticalRoute()
+    public List<Node> CalculateCriticalRoute()
     {
-        
+        return CriticalRoute = InitialNode.CriticalRoute().ToList();
+    }
+
+    public void Calculate()
+    {
+        StartToEnd();
+        EndToStart();
+        CalculateCriticalRoute();
     }
 }

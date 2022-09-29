@@ -46,4 +46,4 @@ using PERT_CPM_Console;
 // Console.WriteLine($"Max Lenght = {cpm.StartToEnd()}");
 
 
-TestCases.Test2();
+TestCases.Test5();

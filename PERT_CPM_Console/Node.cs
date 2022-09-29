@@ -10,6 +10,8 @@ public class Node
     public double LateEnd { get; set; } = double.MaxValue;
     public double LateStart => LateEnd - Length;
 
+    public double Slack => LateStart - EarlyStart;
+
     public bool IsCritical { get; set; }
 
     public HashSet<Node> ParentNodes { get; } = new();
@@ -36,7 +38,7 @@ public class Node
             }
         }
 
-        Console.WriteLine($"Node {Name}: length={Length}, early-start={EarlyStart}");
+        // Console.WriteLine($"Node {Name}: length={Length}, early-start={EarlyStart}");
         return ChildrenNodes.Count == 0 ? EarlyEnd : ChildrenNodes.Max(n => n.ToEnd(this));
     }
 
@@ -59,6 +61,16 @@ public class Node
         {
             parentNode.ToStart(LateStart);
         }
+    }
+
+    public List<Node> CalculateCriticalRoute(List<Node> parentList)
+    {
+        var myList = new List<Node>(parentList);
+        myList.Add(this);
+
+        return (from node in ChildrenNodes
+            where node.Slack == 0
+            select node.CalculateCriticalRoute(myList)).MaxBy(l => l.Count) ?? myList;
     }
 
     public Node AddChild(Node node)
