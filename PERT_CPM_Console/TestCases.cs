@@ -167,7 +167,7 @@ public static class TestCases
 
         cpm.Calculate();
         Console.WriteLine("=========================");
-        Console.WriteLine($"Project length = {cpm.Length}");
+        Console.WriteLine($"Project length = {cpm.ProjectLength}");
         Console.WriteLine("Critical Route:");
         cpm.CriticalRoute.ForEach(n => Console.WriteLine(n.Name));
     }
@@ -199,7 +199,7 @@ public static class TestCases
         var cpm = new Cpm(initial, final);
         cpm.Calculate();
         Console.WriteLine("=========================");
-        Console.WriteLine($"Project length = {cpm.Length}");
+        Console.WriteLine($"Project length = {cpm.ProjectLength}");
         Console.WriteLine("Critical Route:");
         cpm.CriticalRoute.ForEach(n => Console.WriteLine(n.Name));
     }
