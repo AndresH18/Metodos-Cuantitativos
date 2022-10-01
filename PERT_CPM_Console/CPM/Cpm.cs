@@ -1,7 +1,10 @@
-﻿namespace PERT_CPM_Console.CPM;
+﻿using System.Text;
+
+namespace PERT_CPM_Console.CPM;
 
 public sealed class Cpm
 {
+    public HashSet<Node> Nodes { get; set; } = new();
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
     public List<Node> CriticalRoute { get; private set; } = new();
@@ -51,5 +54,44 @@ public sealed class Cpm
         EndToStart();
         CalculateCriticalRoute();
         SetNodesToCritical();
+    }
+
+    public string FormattedCriticalRoute()
+    {
+        const string format = "{0,5},{1,11},{2,11},{3,11},{4,11},{5,11},{6,10}\n";
+        var sb = new StringBuilder();
+
+        sb.AppendFormat(format, "Act", "Length", "Early-Start", "Early-End", "Late-Start", "Late-End", "Crit");
+
+        foreach (var node in CriticalRoute.ToList())
+        {
+            var q = node.ParentNodes.Select(p => p.Name);
+            StringBuilder pred = new StringBuilder();
+            foreach (var s in q)
+            {
+                pred.Append($"{s},");
+            }
+
+            sb.AppendFormat(format, node.Name, node.Length, node.EarlyStart, node.EarlyEnd, node.LateStart,
+                node.LateEnd, node.IsCritical ? "*" : "");
+        }
+
+        return sb.ToString();
+    }
+
+    public string FormattedData()
+    {
+        const string format = "{0,5},{1,11},{2,11},{3,11},{4,11},{5,11},{6,10}\n";
+        var sb = new StringBuilder();
+
+        sb.AppendFormat(format, "Act", "Length", "Early-Start", "Early-End", "Late-Start", "Late-End", "Crit");
+
+        foreach (var node in Nodes.ToList())
+        {
+            sb.AppendFormat(format, node.Name, node.Length, node.EarlyStart, node.EarlyEnd, node.LateStart,
+                node.LateEnd, node.IsCritical ? "*" : "");
+        }
+
+        return sb.ToString();
     }
 }
