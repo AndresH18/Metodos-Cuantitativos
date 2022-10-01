@@ -2,9 +2,13 @@
 
 
 using PERT_CPM_Console;
+using PERT_CPM_Console.CPM;
+using PERT_CPM_Console.ITC;
 using PERT_CPM_Console.Tests;
+using FinalNode = PERT_CPM_Console.FinalNode;
+using InitialNode = PERT_CPM_Console.InitialNode;
 
-// Console.WriteLine("Hello, World!");
+Console.WriteLine("Hello, World!");
 //
 // var a = new Node {Name = "A", Length = 1};
 // var b = new Node {Name = "B", Length = 2};
@@ -47,4 +51,30 @@ using PERT_CPM_Console.Tests;
 // Console.WriteLine($"Max Lenght = {cpm.StartToEnd()}");
 
 
-TestCases.Test6();
+// // var a = new Node("A", 5);
+// // var b = new Node("B", 3);
+// // var c = new Node("C", 7);
+// // var d = new Node("D", 6);
+// // var e = new Node("E", 7);
+// // var f = new Node("F", 3);
+// // var g = new Node("G", 10);
+// // var h = new Node("H", 8);
+
+// // a.AddChild(c).AddChild(h);
+// // a.AddChild(d).AddChild(f).AddChild(h);
+// // d.AddChild(g);
+
+// // b.AddChild(e).AddChild(f);
+// // e.AddChild(g);
+
+// // var initial = new InitialNode { StartNodes = { a, b } };
+// // var final = new FinalNode { FinalNodes = { h, g } };
+
+// // var cpm = new Cpm(initial, final);
+// // cpm.Calculate();
+
+// // cpm.Nodes = new HashSet<Node>() { a, b, c, d, e, f, g, h };
+
+// // cpm.CriticalRoute.ToList().ForEach(n => Console.WriteLine(n.Name));
+
+TestCases.Test4();

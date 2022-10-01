@@ -1,4 +1,5 @@
 ﻿using PERT_CPM_Console.CPM;
+using PERT_CPM_Console.ITC;
 using PERT_CPM_Console.PERT;
 
 namespace PERT_CPM_Console.Tests;
@@ -243,6 +244,41 @@ public static class TestCases
         Console.WriteLine($"Project lenght={pert.ProjectLength}");
         Console.WriteLine($"Project Deviation={pert.ProjectDeviation:.0000}");
         pert.CriticalRoute.ForEach(n => Console.WriteLine(n.Name));
+    }
+
+    #endregion
+
+    #region ITC
+
+    /// <summary>
+    /// Test <see cref="Itc.ObjectiveFunction"/>
+    /// </summary>
+    public static void Test7()
+    {
+        var a = new Node("A", 10);
+        var b = new Node("B", 8);
+        var c = new Node("C", 10);
+        var d = new Node("D", 7);
+        var e = new Node("E", 10);
+        var f = new Node("F", 3);
+
+        a.AddChild(b).AddChild(c).AddChild(f);
+        a.AddChild(d).AddChild(e).AddChild(f);
+
+        var itc = new Itc
+        {
+            NodeSet =
+            {
+                new ItcNode {Node = a},
+                new ItcNode {Node = b},
+                new ItcNode {Node = c},
+                new ItcNode {Node = d},
+                new ItcNode {Node = e},
+                new ItcNode {Node = f, CompressedTime = 3},
+            }
+        };
+
+        Console.WriteLine(itc.ObjectiveFunction());
     }
 
     #endregion
