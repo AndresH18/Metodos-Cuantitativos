@@ -20,7 +20,7 @@ public class Itc
         HeaderRow(); // header row
         _arrayList.Add(new object[_columnIndex.Count]); // empty line (solver parameters)
 
-        // TODO: k values
+        KValues(); // k values 
         _arrayList.Add(new object[_columnIndex.Count]); // empty line (objective function for solver)
         _arrayList.Add(new object[_columnIndex.Count]); // empty line (separator for variables and solutions)
         MRestrictions();
@@ -55,6 +55,22 @@ public class Itc
             _currentLineArray[kvp.Value] = kvp.Key;
         }
 
+        _arrayList.Add(_currentLineArray);
+    }
+
+    private void KValues()
+    {
+        _currentLineArray = new object[_columnIndex.Count];
+
+        var r = NodeSet.Where(n => n.M != 0);
+        int i;
+        foreach (var node in r)
+        {
+            i = _columnIndex[$"Y{node.Node.Name}"];
+
+            _currentLineArray[i] = node.K!;
+        }
+        
         _arrayList.Add(_currentLineArray);
     }
 
