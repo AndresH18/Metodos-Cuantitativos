@@ -18,11 +18,11 @@ public class Itc
         _arrayList = new List<object[]>();
         CreateIndex();
         HeaderRow(); // header row
-        _arrayList.Add(new object[NodeSet.Count]); // empty line (solver parameters)
+        _arrayList.Add(new object[_columnIndex.Count]); // empty line (solver parameters)
 
         // TODO: k values
-        _arrayList.Add(new object[NodeSet.Count]); // empty line (objective function for solver)
-        _arrayList.Add(new object[NodeSet.Count]); // empty line (separator for variables and solutions)
+        _arrayList.Add(new object[_columnIndex.Count]); // empty line (objective function for solver)
+        _arrayList.Add(new object[_columnIndex.Count]); // empty line (separator for variables and solutions)
         MRestrictions();
         XRestrictions();
         FinalRestrictions();
@@ -49,7 +49,7 @@ public class Itc
 
     private void HeaderRow()
     {
-        _currentLineArray = new object[NodeSet.Count];
+        _currentLineArray = new object[_columnIndex.Count];
         foreach (var kvp in _columnIndex)
         {
             _currentLineArray[kvp.Value] = kvp.Key;
@@ -148,7 +148,7 @@ public class Itc
         int pi;
         foreach (var node in NodeSet.Where(n => n.Node.ChildrenNodes.Count == 0))
         {
-            _currentLineArray = new object[NodeSet.Count];
+            _currentLineArray = new object[_columnIndex.Count];
 
             pi = _columnIndex[$"X{node.Node.Name}"];
 
