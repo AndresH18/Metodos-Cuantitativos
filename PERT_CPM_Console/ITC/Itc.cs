@@ -4,6 +4,15 @@ namespace PERT_CPM_Console.ITC;
 
 public class Itc
 {
+    public const string XPre = "X";
+    public const string YPre = "Y";
+    public const string V = "V";
+    public const string R = "R";
+    public const string Fin = XPre + "FIN";
+    public const string Less = "<=";
+    public const string Equal = "=";
+    public const string Greater = ">=";
+
     // private int MCount => NodeSet.Count(node => node.M != 0);
     // private int KCount => NodeSet.Count;
     // private int ColumnCount => MCount + KCount + 3;
@@ -36,15 +45,15 @@ public class Itc
         {
             if (node.M != 0)
             {
-                _columnIndex.Add($"Y{node.Node.Name}", counter++);
+                _columnIndex.Add($"{YPre}{node.Node.Name}", counter++);
             }
 
-            _columnIndex.Add($"X{node.Node.Name}", counter++);
+            _columnIndex.Add($"{XPre}{node.Node.Name}", counter++);
         }
 
-        _columnIndex.Add("XFIN", counter++);
-        _columnIndex.Add("R", counter++);
-        _columnIndex.Add("V", counter);
+        _columnIndex.Add(Fin, counter++);
+        _columnIndex.Add(R, counter++);
+        _columnIndex.Add(R, counter);
     }
 
     private void HeaderRow()
@@ -66,7 +75,7 @@ public class Itc
         int i;
         foreach (var node in r)
         {
-            i = _columnIndex[$"Y{node.Node.Name}"];
+            i = _columnIndex[$"{YPre}{node.Node.Name}"];
 
             _currentLineArray[i] = node.K!;
         }
@@ -80,9 +89,9 @@ public class Itc
         {
             _currentLineArray = new object[_columnIndex.Count];
 
-            var yP = _columnIndex[$"Y{node.Node.Name}"];
-            var rP = _columnIndex["R"];
-            var vP = _columnIndex["V"];
+            var yP = _columnIndex[$"{YPre}{node.Node.Name}"];
+            var rP = _columnIndex[R];
+            var vP = _columnIndex[R];
             _currentLineArray[yP] = 1;
             _currentLineArray[rP] = -1; // <=
             _currentLineArray[vP] = node.M;
@@ -96,8 +105,8 @@ public class Itc
         foreach (var node in NodeSet.OrderBy(n => n.Node.Name))
         {
             int yi, xi, xip;
-            int r = _columnIndex["R"];
-            int v = _columnIndex["V"];
+            int r = _columnIndex[R];
+            int v = _columnIndex[R];
 
 
             if (node.Node.ParentNodes.Count == 0)
@@ -105,11 +114,11 @@ public class Itc
                 // No tiene predecesor (nodo inicial); restriccion = ; tiempo inicial 0
                 _currentLineArray = new object[_columnIndex.Count];
 
-                // yi = _columnIndex[$"Y{node.Node.Name}"];
+                // yi = _columnIndex[$"{YPre}{node.Node.Name}"];
 
-                xi = _columnIndex[$"X{node.Node.Name}"];
+                xi = _columnIndex[$"{XPre}{node.Node.Name}"];
 
-                if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                if (_columnIndex.TryGetValue($"{YPre}{node.Node.Name}", out yi))
                     _currentLineArray[yi] = 1;
 
                 _currentLineArray[xi] = 1;
@@ -125,11 +134,11 @@ public class Itc
 
                 var pNode = node.Node.ParentNodes.First();
 
-                // yi = _columnIndex[$"Y{node.Node.Name}"];
-                xi = _columnIndex[$"X{node.Node.Name}"];
-                xip = _columnIndex[$"X{pNode.Name}"];
+                // yi = _columnIndex[$"{YPre}{node.Node.Name}"];
+                xi = _columnIndex[$"{XPre}{node.Node.Name}"];
+                xip = _columnIndex[$"{XPre}{pNode.Name}"];
 
-                if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                if (_columnIndex.TryGetValue($"{YPre}{node.Node.Name}", out yi))
                     _currentLineArray[yi] = 1;
 
                 _currentLineArray[xi] = 1;
@@ -144,16 +153,16 @@ public class Itc
                 // else if (node.Node.ParentNodes.Count > 1)
                 // tiene mas de un predecesor; restriccion >=
 
-                // yi = _columnIndex[$"Y{node.Node.Name}"];
-                xi = _columnIndex[$"X{node.Node.Name}"];
+                // yi = _columnIndex[$"{YPre}{node.Node.Name}"];
+                xi = _columnIndex[$"{XPre}{node.Node.Name}"];
 
                 foreach (var pNode in node.Node.ParentNodes)
                 {
                     _currentLineArray = new object[_columnIndex.Count];
 
-                    xip = _columnIndex[$"X{pNode.Name}"];
+                    xip = _columnIndex[$"{XPre}{pNode.Name}"];
 
-                    if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                    if (_columnIndex.TryGetValue($"{YPre}{node.Node.Name}", out yi))
                         _currentLineArray[yi] = 1;
 
                     _currentLineArray[xi] = 1;
@@ -169,14 +178,14 @@ public class Itc
 
     private void FinalRestrictions()
     {
-        int fi = _columnIndex["XFIN"];
-        int ri = _columnIndex["R"];
+        int fi = _columnIndex[Fin];
+        int ri = _columnIndex[R];
         int pi;
         foreach (var node in NodeSet.Where(n => n.Node.ChildrenNodes.Count == 0))
         {
             _currentLineArray = new object[_columnIndex.Count];
 
-            pi = _columnIndex[$"X{node.Node.Name}"];
+            pi = _columnIndex[$"{XPre}{node.Node.Name}"];
 
             _currentLineArray[pi] = -1;
             _currentLineArray[fi] = 1;
@@ -200,7 +209,7 @@ public class Itc
             .Select(n => n.Name)
             .ToList().ForEach(name =>
             {
-                sb.AppendFormat("Y{0},", name);
+                sb.AppendFormat($"{YPre}{0},", name);
                 _columnCount++;
             });
         // X values
@@ -209,7 +218,7 @@ public class Itc
             .Select(n => n.Name)
             .ToList().ForEach(name =>
             {
-                sb.AppendFormat("Y{0},", name);
+                sb.AppendFormat($"{YPre}{0},", name);
                 _columnCount++;
             });
         sb.AppendLine("LHS,RST,RHS");
