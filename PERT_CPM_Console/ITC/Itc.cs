@@ -70,7 +70,7 @@ public class Itc
 
             _currentLineArray[i] = node.K!;
         }
-        
+
         _arrayList.Add(_currentLineArray);
     }
 
@@ -99,15 +99,19 @@ public class Itc
             int r = _columnIndex["R"];
             int v = _columnIndex["V"];
 
+
             if (node.Node.ParentNodes.Count == 0)
             {
                 // No tiene predecesor (nodo inicial); restriccion = ; tiempo inicial 0
                 _currentLineArray = new object[_columnIndex.Count];
 
-                yi = _columnIndex[$"Y{node.Node.Name}"];
+                // yi = _columnIndex[$"Y{node.Node.Name}"];
+
                 xi = _columnIndex[$"X{node.Node.Name}"];
 
-                _currentLineArray[yi] = 1;
+                if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                    _currentLineArray[yi] = 1;
+
                 _currentLineArray[xi] = 1;
                 _currentLineArray[v] = node.NormalTime; // node.Node.Length
                 _currentLineArray[r] = 0; // =
@@ -120,11 +124,14 @@ public class Itc
                 _currentLineArray = new object[_columnIndex.Count];
 
                 var pNode = node.Node.ParentNodes.First();
-                yi = _columnIndex[$"Y{node.Node.Name}"];
+
+                // yi = _columnIndex[$"Y{node.Node.Name}"];
                 xi = _columnIndex[$"X{node.Node.Name}"];
                 xip = _columnIndex[$"X{pNode.Name}"];
 
-                _currentLineArray[yi] = 1;
+                if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                    _currentLineArray[yi] = 1;
+
                 _currentLineArray[xi] = 1;
                 _currentLineArray[xip] = -1;
                 _currentLineArray[v] = node.NormalTime; // node.Node.Length
@@ -136,7 +143,8 @@ public class Itc
             {
                 // else if (node.Node.ParentNodes.Count > 1)
                 // tiene mas de un predecesor; restriccion >=
-                yi = _columnIndex[$"Y{node.Node.Name}"];
+
+                // yi = _columnIndex[$"Y{node.Node.Name}"];
                 xi = _columnIndex[$"X{node.Node.Name}"];
 
                 foreach (var pNode in node.Node.ParentNodes)
@@ -145,7 +153,9 @@ public class Itc
 
                     xip = _columnIndex[$"X{pNode.Name}"];
 
-                    _currentLineArray[yi] = 1;
+                    if (_columnIndex.TryGetValue($"Y{node.Node.Name}", out yi))
+                        _currentLineArray[yi] = 1;
+
                     _currentLineArray[xi] = 1;
                     _currentLineArray[xip] = -1;
                     _currentLineArray[v] = node.NormalTime; // node.Node.Length
