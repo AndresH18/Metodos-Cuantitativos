@@ -68,9 +68,7 @@ public class Node
         var myList = new List<Node>(parentList);
         myList.Add(this);
 
-        return (from node in ChildrenNodes
-            where node.Slack == 0
-            select node.CalculateCriticalRoute(myList)).MaxBy(l => l.Count) ?? myList;
+        return (ChildrenNodes.Where(node => node.Slack == 0).Select(node => node.CalculateCriticalRoute(myList))).MaxBy(l => l.Count) ?? myList;
     }
 
     public Node AddChild(Node node)
