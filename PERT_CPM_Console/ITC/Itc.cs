@@ -16,25 +16,37 @@ public class Itc
     // private int MCount => NodeSet.Count(node => node.M != 0);
     // private int KCount => NodeSet.Count;
     // private int ColumnCount => MCount + KCount + 3;
-    public HashSet<ItcNode> NodeSet { get; set; } = new();
+    public HashSet<ItcNode> NodeSet { get;} = new();
 
     private Dictionary<string, int> _columnIndex = default!;
     private List<object[]> _arrayList = default!;
     private object[] _currentLineArray = default!;
 
-    public void Generate()
+    public List<object[]> Generate()
     {
         _arrayList = new List<object[]>();
         CreateIndex();
         HeaderRow(); // header row
-        _arrayList.Add(new object[_columnIndex.Count]); // empty line (solver parameters)
+        _arrayList.Add(Array.Empty<object>()); // empty line (solver parameters)
 
         KValues(); // k values 
         _arrayList.Add(new object[_columnIndex.Count]); // empty line (objective function for solver)
         _arrayList.Add(new object[_columnIndex.Count]); // empty line (separator for variables and solutions)
         MRestrictions();
         XRestrictions();
-        FinalRestrictions();
+        EndRestrictions();
+
+        _currentLineArray = new object[_columnIndex.Count];
+        int fRow, rRow;
+        if (_columnIndex.TryGetValue(Fin, out fRow) && _columnIndex.TryGetValue(R, out rRow))
+        {
+            _currentLineArray[fRow] = 1;
+            _currentLineArray[rRow] = Equal;
+        }
+
+        _arrayList.Add(_currentLineArray);
+
+        return _arrayList;
     }
 
     private void CreateIndex()
@@ -53,7 +65,7 @@ public class Itc
 
         _columnIndex.Add(Fin, counter++);
         _columnIndex.Add(R, counter++);
-        _columnIndex.Add(R, counter);
+        _columnIndex.Add(V, counter);
     }
 
     private void HeaderRow()
@@ -91,9 +103,9 @@ public class Itc
 
             var yP = _columnIndex[$"{YPre}{node.Node.Name}"];
             var rP = _columnIndex[R];
-            var vP = _columnIndex[R];
+            var vP = _columnIndex[V];
             _currentLineArray[yP] = 1;
-            _currentLineArray[rP] = -1; // <=
+            _currentLineArray[rP] = Less; // <=
             _currentLineArray[vP] = node.M;
 
             _arrayList.Add(_currentLineArray);
@@ -106,7 +118,7 @@ public class Itc
         {
             int yi, xi, xip;
             int r = _columnIndex[R];
-            int v = _columnIndex[R];
+            int v = _columnIndex[V];
 
 
             if (node.Node.ParentNodes.Count == 0)
@@ -123,7 +135,7 @@ public class Itc
 
                 _currentLineArray[xi] = 1;
                 _currentLineArray[v] = node.NormalTime; // node.Node.Length
-                _currentLineArray[r] = 0; // =
+                _currentLineArray[r] = Equal; // =
 
                 _arrayList.Add(_currentLineArray);
             }
@@ -144,7 +156,7 @@ public class Itc
                 _currentLineArray[xi] = 1;
                 _currentLineArray[xip] = -1;
                 _currentLineArray[v] = node.NormalTime; // node.Node.Length
-                _currentLineArray[r] = 0; // =
+                _currentLineArray[r] = Equal; // =
 
                 _arrayList.Add(_currentLineArray);
             }
@@ -168,7 +180,7 @@ public class Itc
                     _currentLineArray[xi] = 1;
                     _currentLineArray[xip] = -1;
                     _currentLineArray[v] = node.NormalTime; // node.Node.Length
-                    _currentLineArray[r] = 1; // >=
+                    _currentLineArray[r] = Greater; // >=
 
                     _arrayList.Add(_currentLineArray);
                 }
@@ -176,7 +188,7 @@ public class Itc
         }
     }
 
-    private void FinalRestrictions()
+    private void EndRestrictions()
     {
         int fi = _columnIndex[Fin];
         int ri = _columnIndex[R];
@@ -189,7 +201,7 @@ public class Itc
 
             _currentLineArray[pi] = -1;
             _currentLineArray[fi] = 1;
-            _currentLineArray[ri] = 1; // >=
+            _currentLineArray[ri] = Greater; // >=
 
             _arrayList.Add(_currentLineArray);
         }

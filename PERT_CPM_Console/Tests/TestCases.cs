@@ -1,4 +1,5 @@
-﻿using PERT_CPM_Console.CPM;
+﻿using System.Text;
+using PERT_CPM_Console.CPM;
 using PERT_CPM_Console.ITC;
 using PERT_CPM_Console.PERT;
 
@@ -265,20 +266,92 @@ public static class TestCases
         a.AddChild(b).AddChild(c).AddChild(f);
         a.AddChild(d).AddChild(e).AddChild(f);
 
-        var itc = new Itc
+        // var itc = new Itc
+        // {
+        //     NodeSet =
+        //     {
+        //         new ItcNode {Node = a},
+        //         new ItcNode {Node = b},
+        //         new ItcNode {Node = c},
+        //         new ItcNode {Node = d},
+        //         new ItcNode {Node = e},
+        //         new ItcNode {Node = f, CompressedTime = 3},
+        //     }
+        // };
+        //
+        // Console.WriteLine(itc.ObjectiveFunction());
+    }
+
+
+    public static void Test8()
+    {
+        var a = new Node("A", 10);
+        var b = new Node("B", 8);
+        var c = new Node("C", 10);
+        var d = new Node("D", 7);
+        var e = new Node("E", 10);
+        var f = new Node("F", 3);
+
+        a.AddChild(b).AddChild(c).AddChild(f);
+        a.AddChild(d).AddChild(e).AddChild(f);
+
+        var itc = new Itc()
         {
             NodeSet =
             {
-                new ItcNode {Node = a},
-                new ItcNode {Node = b},
-                new ItcNode {Node = c},
-                new ItcNode {Node = d},
-                new ItcNode {Node = e},
-                new ItcNode {Node = f, CompressedTime = 3},
+                new ItcNode(a)
+                {
+                    CompressedTime = 8,
+                    NormalPrice = 30,
+                    CompressedPrice = 70,
+                },
+                new ItcNode(b)
+                {
+                    CompressedTime = 6,
+                    NormalPrice = 120,
+                    CompressedPrice = 150,
+                },
+                new ItcNode(c)
+                {
+                    CompressedTime = 7,
+                    NormalPrice = 100,
+                    CompressedPrice = 160,
+                },
+                new ItcNode(d)
+                {
+                    CompressedTime = 6,
+                    NormalPrice = 40,
+                    CompressedPrice = 50,
+                },
+                new ItcNode(e)
+                {
+                    CompressedTime = 8,
+                    NormalPrice = 50,
+                    CompressedPrice = 75,
+                },
+                new ItcNode(f)
+                {
+                    CompressedTime = 3,
+                    NormalPrice = 60,
+                },
             }
         };
 
-        Console.WriteLine(itc.ObjectiveFunction());
+        var r = itc.Generate();
+        var sb = new StringBuilder();
+
+        foreach (var line in r)
+        {
+            sb.AppendJoin(',', line);
+
+            sb.AppendLine();
+        }
+
+        var directory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        using var file = File.Create(Path.Combine(directory, "metodos.csv"));
+
+        using var fileWriter = new StreamWriter(file);
+        fileWriter.WriteLine(sb);
     }
 
     #endregion

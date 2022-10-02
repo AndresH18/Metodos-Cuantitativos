@@ -4,7 +4,12 @@ namespace PERT_CPM_Console.ITC;
 
 public class ItcNode
 {
-    public Node Node { get; init; } = default!;
+    public Node Node { get; init; }
+
+    public ItcNode(Node node)
+    {
+        Node = node;
+    }
 
     public double NormalTime => Node.Length;
     public double CompressedTime { get; init; } = 0;

@@ -77,4 +77,4 @@ Console.WriteLine("Hello, World!");
 
 // // cpm.CriticalRoute.ToList().ForEach(n => Console.WriteLine(n.Name));
 
-TestCases.Test4();
+TestCases.Test8();
