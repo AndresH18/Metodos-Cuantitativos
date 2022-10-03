@@ -16,13 +16,13 @@ public class Itc
     // private int MCount => NodeSet.Count(node => node.M != 0);
     // private int KCount => NodeSet.Count;
     // private int ColumnCount => MCount + KCount + 3;
-    public HashSet<ItcNode> NodeSet { get;} = new();
+    public HashSet<ItcNode> NodeSet { get; init; } = new();
 
     private Dictionary<string, int> _columnIndex = default!;
     private List<object[]> _arrayList = default!;
     private object[] _currentLineArray = default!;
 
-    public List<object[]> Generate()
+    public List<object[]> Generate(double t = 0)
     {
         _arrayList = new List<object[]>();
         CreateIndex();
@@ -37,11 +37,13 @@ public class Itc
         EndRestrictions();
 
         _currentLineArray = new object[_columnIndex.Count];
-        int fRow, rRow;
-        if (_columnIndex.TryGetValue(Fin, out fRow) && _columnIndex.TryGetValue(R, out rRow))
+        int fRow, rRow, vRow;
+        if (_columnIndex.TryGetValue(Fin, out fRow) && _columnIndex.TryGetValue(R, out rRow) &&
+            _columnIndex.TryGetValue(V, out vRow))
         {
             _currentLineArray[fRow] = 1;
             _currentLineArray[rRow] = Equal;
+            _currentLineArray[vRow] = t;
         }
 
         _arrayList.Add(_currentLineArray);

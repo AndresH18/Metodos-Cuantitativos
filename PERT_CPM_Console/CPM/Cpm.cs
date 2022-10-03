@@ -82,18 +82,18 @@ public sealed class Cpm
 
     public string FormattedData()
     {
-        const string format = "{0,5},{1,8},{2,13},{3,11},{4,11},{5,9},{6,7}\n";
+        const string format = "{0,5},{1,8},{2,13},{3,11},{4,11},{5,9},{6,7},{7,7}\n";
         var sb = new StringBuilder();
 
         sb.AppendLine("==> Resultados <==");
         sb.AppendLine($"Project Lenght: {ProjectLength}");
 
-        sb.AppendFormat(format, "Act", "Length", "Early-Start", "Early-End", "Late-Start", "Late-End", "Crit");
+        sb.AppendFormat(format, "Act", "Length", "Early-Start", "Early-End", "Late-Start", "Late-End", "Slack", "Crit");
 
         foreach (var node in Nodes.ToList())
         {
             sb.AppendFormat(format, node.Name, node.Length, node.EarlyStart, node.EarlyEnd, node.LateStart,
-                node.LateEnd, node.IsCritical ? "*" : "");
+                node.LateEnd, node.Slack, node.IsCritical ? "*" : "");
         }
 
         return sb.ToString();
