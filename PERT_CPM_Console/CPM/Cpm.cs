@@ -4,7 +4,7 @@ namespace PERT_CPM_Console.CPM;
 
 public sealed class Cpm
 {
-    public HashSet<Node> Nodes { get; set; } = new();
+    public HashSet<Node> Nodes { get; init; } = new();
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
     public List<Node> CriticalRoute { get; private set; } = new();
@@ -56,6 +56,7 @@ public sealed class Cpm
         SetNodesToCritical();
     }
 
+    [Obsolete]
     public string FormattedCriticalRoute()
     {
         const string format = "{0,5},{1,11},{2,11},{3,11},{4,11},{5,11},{6,10}\n";
@@ -81,8 +82,11 @@ public sealed class Cpm
 
     public string FormattedData()
     {
-        const string format = "{0,5},{1,11},{2,11},{3,11},{4,11},{5,11},{6,10}\n";
+        const string format = "{0,5},{1,8},{2,13},{3,11},{4,11},{5,9},{6,7}\n";
         var sb = new StringBuilder();
+
+        sb.AppendLine("==> Resultados <==");
+        sb.AppendLine($"Project Lenght: {ProjectLength}");
 
         sb.AppendFormat(format, "Act", "Length", "Early-Start", "Early-End", "Late-Start", "Late-End", "Crit");
 

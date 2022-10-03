@@ -3,7 +3,7 @@
 public class Node
 {
     public string Name { get; protected init; } = string.Empty;
-    public virtual double Length { get;  }
+    public virtual double Length { get; }
     public double EarlyStart { get; private set; }
     public double EarlyEnd => EarlyStart + Length;
 
@@ -68,7 +68,8 @@ public class Node
         var myList = new List<Node>(parentList);
         myList.Add(this);
 
-        return (ChildrenNodes.Where(node => node.Slack == 0).Select(node => node.CalculateCriticalRoute(myList))).MaxBy(l => l.Count) ?? myList;
+        return (ChildrenNodes.Where(node => node.Slack == 0).Select(node => node.CalculateCriticalRoute(myList)))
+            .MaxBy(l => l.Count) ?? myList;
     }
 
     public Node AddChild(Node node)
@@ -76,5 +77,11 @@ public class Node
         ChildrenNodes.Add(node);
         node.ParentNodes.Add(this);
         return node;
+    }
+
+    public void AddParent(Node node)
+    {
+        ParentNodes.Add(node);
+        node.ChildrenNodes.Add(this);
     }
 }

@@ -4,11 +4,13 @@
 using PERT_CPM_Console;
 using PERT_CPM_Console.CPM;
 using PERT_CPM_Console.ITC;
+using PERT_CPM_Console.PERT;
 using PERT_CPM_Console.Tests;
 using FinalNode = PERT_CPM_Console.FinalNode;
 using InitialNode = PERT_CPM_Console.InitialNode;
 
 Console.WriteLine("Hello, World!");
+Itc();
 //
 // var a = new Node {Name = "A", Length = 1};
 // var b = new Node {Name = "B", Length = 2};
@@ -77,4 +79,136 @@ Console.WriteLine("Hello, World!");
 
 // // cpm.CriticalRoute.ToList().ForEach(n => Console.WriteLine(n.Name));
 
-TestCases.Test8();
+// TestCases.Test8();
+
+Dictionary<string, Node> nodesDictionary;
+InitialNode initialNode;
+FinalNode finalNode;
+
+Console.WriteLine(@"Ingrese -c para ""CPM"" o -p para ""PERT""");
+
+var response = Console.ReadLine() ?? "";
+if (response.Contains("-c"))
+{
+    Console.WriteLine(
+        "Ingrese la información de los nodos en el siguiente formato, " +
+        "Pulse enter sin ingresar ningún dato para continuar");
+    Console.WriteLine("<nombre>;<duración>\n" + "Ejemplo: A; 1.2");
+
+    nodesDictionary = new Dictionary<string, Node>();
+
+    while (!string.IsNullOrWhiteSpace(response = Console.ReadLine()?.ToUpper()))
+    {
+        var r = response.Replace(" ", "").Split(';');
+        if (r.Length > 1)
+        {
+            var name = r[0];
+            double length;
+            if (double.TryParse(r[1], out length))
+            {
+                if (nodesDictionary.TryAdd(name, new Node(name, length)))
+                {
+                    Console.WriteLine($"Name={name}, Length={length}");
+                }
+                else
+                {
+                    Console.WriteLine($"El nodo {name} ya existe.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Ingrese una longitud valida");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Ingrese información valida");
+        }
+    }
+
+    initialNode = new InitialNode();
+    finalNode = new FinalNode();
+
+    Console.WriteLine("Ingrese los nombres de los padres de los nodos, separados por coma ','.\n" +
+                      "Si no ingresa un nombre, se considerara el nodo como una actividad inicial.");
+    foreach (var kvp in nodesDictionary)
+    {
+        Console.WriteLine($"Ingrese el nombre de los padres del nodo {kvp.Key}");
+        response = Console.ReadLine()?.Replace(" ", "").ToUpper();
+
+        if (!string.IsNullOrWhiteSpace(response))
+        {
+            var parentsNames = response.Split(',');
+            foreach (var name in parentsNames)
+            {
+                if (nodesDictionary.TryGetValue(name, out var parentNode))
+                {
+                    kvp.Value.AddParent(parentNode);
+                }
+                else
+                {
+                    Console.WriteLine($"No existe un nodo con nombre {name}");
+                }
+            }
+        }
+        else
+        {
+            initialNode.StartNodes.Add(kvp.Value);
+            Console.WriteLine($"{kvp.Key} es un nodo inicial");
+        }
+    }
+
+    Console.WriteLine("\nIngrese los Nodos finales separados por ','");
+    response = Console.ReadLine()?.Replace(" ", "").ToUpper() ?? "";
+    foreach (var name in response.Split(','))
+    {
+        if (nodesDictionary.TryGetValue(name, out var node))
+        {
+            finalNode.FinalNodes.Add(node);
+        }
+        else
+        {
+            Console.WriteLine($"No existe el nodo {name}");
+        }
+    }
+
+    var cpm = new Cpm(initialNode, finalNode) {Nodes = nodesDictionary.Values.ToHashSet()};
+
+    cpm.Calculate();
+
+    // TODO: show each node's slack
+    Console.WriteLine(cpm.FormattedData());
+
+    Console.WriteLine("\n\nDesea hacer \"Intercambio Tiempo Costo\"? [Y/N]");
+    if (Console.ReadLine()?.ToUpper().Equals("Y") ?? false)
+    {
+        Itc();
+    }
+}
+else if (response.Contains("-p"))
+{
+    // TODO: ask for node's information (name, time_a, time_m, time_b)
+
+    // TODO: ask for each node's parent by name. Nodes without parents are start nodes
+
+    // TODO: ask for final nodes
+
+    // TODO: perform PERT. Show nodes information
+    //      (name, lenght, early-start, early-end, late-start, late-end, variance, is-critical)
+
+    Console.WriteLine("\n\nDesea hacer \"Intercambio Tiempo Costo\"? [Y/N]");
+    if (Console.ReadLine()?.ToUpper().Equals("Y") ?? false)
+    {
+        Itc();
+    }
+}
+
+
+void Itc()
+{
+    // TODO: ask information for ITC
+
+    // TODO: ask compression time
+
+    // TODO: calculate Itc
+}
