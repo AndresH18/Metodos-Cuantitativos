@@ -8,9 +8,9 @@ public class PertNode : Node
     public double LikelyValue { get; set; }
     public double LastValue { get; set; }
 
-    public override double Length => (InitialValue + 4 * LikelyValue + LastValue) / 6;
+    public override double Length => Math.Round((InitialValue + 4 * LikelyValue + LastValue) / 6, 10);
 
-    public double Deviation => (LastValue - InitialValue) / 6;
+    public double Deviation => Math.Round((LastValue - InitialValue) / 6, 10);
 
     public PertNode()
     {

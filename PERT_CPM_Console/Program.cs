@@ -96,13 +96,13 @@ if (response.Contains("-c"))
     Console.WriteLine(
         "Ingrese la información de los nodos en el siguiente formato, " +
         "Pulse enter sin ingresar ningún dato para continuar");
-    Console.WriteLine("<nombre>;<duración>\n" + "Ejemplo: A; 1.2");
+    Console.WriteLine("<nombre>, <duración>\n" + "Ejemplo: A, 1.2");
 
     nodesDictionary = new Dictionary<string, Node>();
 
     while (!string.IsNullOrWhiteSpace(response = Console.ReadLine()?.ToUpper()))
     {
-        var r = response.Replace(" ", "").Split(';');
+        var r = response.Replace(" ", "").Split(',');
         if (r.Length > 1)
         {
             var name = r[0];
@@ -193,13 +193,13 @@ else if (response.Contains("-p"))
     Console.WriteLine(
         "Ingrese la información de los nodos en el siguiente formato, " +
         "Pulse enter sin ingresar ningún dato para continuar");
-    Console.WriteLine("<nombre>; <t-optimista>; <t-mas-probable>; <t-pesimista>\n" + "Ejemplo: A; 1.2; 2; 3");
+    Console.WriteLine("<nombre>, <t-optimista>, <t-mas-probable>, <t-pesimista>\n" + "Ejemplo: A, 1.2, 2, 3");
 
     nodesDictionary = new Dictionary<string, Node>();
 
     while (!string.IsNullOrWhiteSpace(response = Console.ReadLine()?.ToUpper()))
     {
-        var r = response.Replace(" ", "").Split(';');
+        var r = response.Replace(" ", "").Split(',');
         if (r.Length >= 4)
         {
             var name = r[0];
@@ -303,7 +303,7 @@ void Itc()
     var nodeSet = new HashSet<ItcNode>();
 
     Console.WriteLine("Ingrese los datos de tiempo y costo de las actividades.\n" +
-                      "Utilize el siguiete formato: <tiempo-comprimido>; <costo-normal>; <costo-comprimido>\n");
+                      "Utilize el siguiete formato: <tiempo-comprimido>, <costo-normal>, <costo-comprimido>\n");
 
     bool cont = false;
     foreach (var kvp in nodesDictionary)
@@ -313,7 +313,7 @@ void Itc()
         {
             Console.WriteLine($"Ingrese los datos para el nodo {kvp.Key}");
 
-            resp = Console.ReadLine()?.Replace(" ", "").ToUpper().Split(';');
+            resp = Console.ReadLine()?.Replace(" ", "").ToUpper().Split(',');
             double tiempoComprimido, costoNormal, costoComprimido;
 
             if (resp is {Length: >= 3} && double.TryParse(resp[0], out tiempoComprimido) &&

@@ -8,8 +8,8 @@ public class Pert
     public InitialNode InitialNode { get; init; }
     public FinalNode FinalNode { get; init; }
     public List<PertNode> CriticalRoute { get; private set; } = new();
-    public double ProjectVariance => CriticalRoute.Sum(n => Math.Pow(n.Deviation, 2));
-    public double ProjectDeviation => Math.Sqrt(ProjectVariance);
+    public double ProjectVariance => CriticalRoute.Sum(n => Math.Round(Math.Pow(n.Deviation, 2), 10));
+    public double ProjectDeviation => Math.Round(Math.Sqrt(ProjectVariance), 10);
     public double ProjectLength { get; private set; } = default;
 
     public HashSet<Node> Nodes { get; init; } = new();
@@ -55,7 +55,9 @@ public class Pert
 
     public string FormattedData()
     {
-        const string format = "{0,5},{1,8},{2,10},{3,10},{4,10},{5,10:.0000},{6,13},{7,11},{8,11},{9,9},{10,7},{11,7}\n";
+        const string format =
+            "{0,5},{1,8:.0000},{2,10:.0000},{3,10:.0000},{4,10:.0000},{5,10:.0000}," +
+            "{6,13:.0000},{7,11:.0000},{8,11:.0000},{9,9:.0000},{10,7:.0000},{11,7:.0000}\n";
         var sb = new StringBuilder();
 
         sb.AppendLine("==> Resultados <==");

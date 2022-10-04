@@ -10,7 +10,7 @@ public class Node
     public double LateEnd { get; private set; } = double.MaxValue;
     public double LateStart => LateEnd - Length;
 
-    public double Slack => LateStart - EarlyStart;
+    public double Slack => Math.Round(LateStart - EarlyStart, 10);
 
     public bool IsCritical { get; set; }
 
